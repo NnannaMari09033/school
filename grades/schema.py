@@ -1,12 +1,12 @@
 import graphene
 from graphene_django import DjangoObjectType
-from .models import Grade
+from .models import grades
 from students.models import students
 from courses.models import courses
 
 class GradeType(DjangoObjectType):
     class Meta:
-        model = Grade
+        model = grades
         fields = '__all__'
 
 class Query(graphene.ObjectType):
@@ -14,12 +14,12 @@ class Query(graphene.ObjectType):
     grade_by_id = graphene.Field(GradeType, id=graphene.Int(required=True))
 
     def resolve_all_grades(self, info):
-        return Grade.objects.all()
+        return grades.objects.all()
 
     def resolve_grade_by_id(self, info, id):
         try:
-            return Grade.objects.get(id=id)
-        except Grade.DoesNotExist:
+            return grades.objects.get(id=id)
+        except grades.DoesNotExist:
             return None
 
 class CreateGrade(graphene.Mutation):
@@ -36,7 +36,7 @@ class CreateGrade(graphene.Mutation):
         try:
             student = students.objects.get(id=student_id)
             course = courses.objects.get(id=course_id)
-            grade = Grade(student=student, course=course, score=score, letter_grade=letter_grade, semester=semester)
+            grade = grades(student=student, course=course, score=score, letter_grade=letter_grade, semester=semester)
             grade.save()
             return CreateGrade(grade=grade)
         except (students.DoesNotExist, courses.DoesNotExist):

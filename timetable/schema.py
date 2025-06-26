@@ -1,12 +1,12 @@
 import graphene
 from graphene_django import DjangoObjectType
-from .models import TimeSlot, TimetableEntry
-from courses.models import Courses
+from .models import timeSlot, TimetableEntry
+from courses.models import courses
 from teachers.models import teachers
 
 class TimeSlotType(DjangoObjectType):
-    class Meta:
-        model = TimeSlot
+    class Meta
+        model = timeSlot
         fields = '__all__'
 
 class TimetableEntryType(DjangoObjectType):
@@ -21,15 +21,15 @@ class Query(graphene.ObjectType):
     timetable_entry_by_id = graphene.Field(TimetableEntryType, id=graphene.Int(required=True))
 
     def resolve_all_timeslots(self, info):
-        return TimeSlot.objects.all()
+        return timeSlot.objects.all()
 
     def resolve_all_timetable_entries(self, info):
         return TimetableEntry.objects.all()
 
     def resolve_timeslot_by_id(self, info, id):
         try:
-            return TimeSlot.objects.get(id=id)
-        except TimeSlot.DoesNotExist:
+            return timeSlot.objects.get(id=id)
+        except timeSlot.DoesNotExist:
             return None
 
     def resolve_timetable_entry_by_id(self, info, id):
@@ -48,7 +48,7 @@ class CreateTimeSlot(graphene.Mutation):
     timeslot = graphene.Field(TimeSlotType)
 
     def mutate(self, info, day, start_time, end_time, room):
-        timeslot = TimeSlot(day=day, start_time=start_time, end_time=end_time, room=room)
+        timeslot = timeSlot(day=day, start_time=start_time, end_time=end_time, room=room)
         timeslot.save()
         return CreateTimeSlot(timeslot=timeslot)
 
@@ -64,12 +64,12 @@ class CreateTimetableEntry(graphene.Mutation):
     def mutate(self, info, course_id, timeslot_id, teacher_id, semester):
         try:
             course = Courses.objects.get(id=course_id)
-            timeslot = TimeSlot.objects.get(id=timeslot_id)
+            timeslot =timeSlot.objects.get(id=timeslot_id)
             teacher = teachers.objects.get(id=teacher_id)
             entry = TimetableEntry(course=course, timeslot=timeslot, teacher=teacher, semester=semester)
             entry.save()
             return CreateTimetableEntry(timetable_entry=entry)
-        except (Courses.DoesNotExist, TimeSlot.DoesNotExist, teachers.DoesNotExist):
+        except (Courses.DoesNotExist, timeSlot.DoesNotExist, teachers.DoesNotExist):
             raise Exception("Course, TimeSlot, or Teacher not found")
 
 class Mutation(graphene.ObjectType):
