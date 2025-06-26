@@ -45,12 +45,21 @@ INSTALLED_APPS = [
     'timetable',
     'managements',
     'rest_framework',
+    'django_filters',
+    'graphql_jwt',
+    
 ]
 
-GRAPHENE = {
-    'SCHEMA': 'school.schema.schema'
-}
 
+GRAPHENE = {
+    'SCHEMA': 'school.schema.schema',
+    'MIDDLEWARE': ['graphql_jwt.middleware.JSONWebTokenMiddleware'],
+    'RELAY_CONNECTION_MAX_LIMIT': 100,
+}
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

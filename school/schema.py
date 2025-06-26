@@ -5,7 +5,7 @@ from managements.schema import Query as ManagementQuery, Mutation as ManagementM
 from courses.schema import Query as CourseQuery, Mutation as CourseMutation
 from grades.schema import Query as GradeQuery, Mutation as GradeMutation
 from timetable.schema import Query as TimetableQuery, Mutation as TimetableMutation
-
+import graphql_jwt
 class Query(
     StudentQuery,
     TeacherQuery,
@@ -29,3 +29,15 @@ class Mutation(
     pass
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
+
+
+
+    # ... other queries
+class Mutation(
+    StudentMutation,
+    # ... other mutations
+    graphene.ObjectType
+):
+    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    verify_token = graphql_jwt.Verify.Field()
+    refresh_token = graphql_jwt.Refresh.Field()

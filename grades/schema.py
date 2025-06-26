@@ -1,8 +1,8 @@
 import graphene
 from graphene_django import DjangoObjectType
 from .models import Grade
-from students.models import Student
-from courses.models import Course
+from students.models import students
+from courses.models import courses
 
 class GradeType(DjangoObjectType):
     class Meta:
@@ -34,12 +34,12 @@ class CreateGrade(graphene.Mutation):
 
     def mutate(self, info, student_id, course_id, score, letter_grade, semester):
         try:
-            student = Student.objects.get(id=student_id)
-            course = Course.objects.get(id=course_id)
+            student = students.objects.get(id=student_id)
+            course = courses.objects.get(id=course_id)
             grade = Grade(student=student, course=course, score=score, letter_grade=letter_grade, semester=semester)
             grade.save()
             return CreateGrade(grade=grade)
-        except (Student.DoesNotExist, Course.DoesNotExist):
+        except (students.DoesNotExist, courses.DoesNotExist):
             raise Exception("Student or Course not found")
 
 class Mutation(graphene.ObjectType):

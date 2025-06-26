@@ -1,12 +1,12 @@
 import graphene
 from graphene_django import DjangoObjectType
-from .models import Course
-from teachers.models import Teacher
-from students.models import Student
+from .models import courses
+from teachers.models import teachers
+from students.models import students
 
 class CourseType(DjangoObjectType):
     class Meta:
-        model = Course
+        model = courses
         fields = '__all__'
 
 class Query(graphene.ObjectType):
@@ -14,12 +14,12 @@ class Query(graphene.ObjectType):
     course_by_id = graphene.Field(CourseType, id=graphene.Int(required=True))
 
     def resolve_all_courses(self, info):
-        return Course.objects.all()
+        return courses.objects.all()
 
     def resolve_course_by_id(self, info, id):
         try:
-            return Course.objects.get(id=id)
-        except Course.DoesNotExist:
+            return courses.objects.get(id=id)
+        except courses.DoesNotExist:
             return None
 
 class CreateCourse(graphene.Mutation):
@@ -33,11 +33,11 @@ class CreateCourse(graphene.Mutation):
 
     def mutate(self, info, name, code, teacher_id, credits):
         try:
-            teacher = Teacher.objects.get(id=teacher_id)
-            course = Course(name=name, code=code, teacher=teacher, credits=credits)
+            teacher = teachers.objects.get(id=teacher_id)
+            course = courses(name=name, code=code, teacher=teacher, credits=credits)
             course.save()
             return CreateCourse(course=course)
-        except Teacher.DoesNotExist:
+        except teachers.DoesNotExist:
             raise Exception("Teacher not found")
 
 class EnrollStudent(graphene.Mutation):
@@ -49,11 +49,11 @@ class EnrollStudent(graphene.Mutation):
 
     def mutate(self, info, student_id, course_id):
         try:
-            student = Student.objects.get(id=student_id)
-            course = Course.objects.get(id=course_id)
+            student = students.objects.get(id=student_id)
+            course = courses.objects.get(id=course_id)
             course.students.add(student)
             return EnrollStudent(course=course)
-        except (Student.DoesNotExist, Course.DoesNotExist):
+        except (students.DoesNotExist, courses.DoesNotExist):
             raise Exception("Student or Course not found")
 
 class Mutation(graphene.ObjectType):

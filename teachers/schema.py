@@ -1,10 +1,10 @@
 import graphene
 from graphene_django import DjangoObjectType
-from .models import Teacher
+from .models import teachers
 
 class TeacherType(DjangoObjectType):
     class Meta:
-        model = Teacher
+        model = teachers
         fields = '__all__'
 
 class Query(graphene.ObjectType):
@@ -12,12 +12,12 @@ class Query(graphene.ObjectType):
     teacher_by_id = graphene.Field(TeacherType, id=graphene.Int(required=True))
 
     def resolve_all_teachers(self, info):
-        return Teacher.objects.all()
+        return teachers.objects.all()
 
     def resolve_teacher_by_id(self, info, id):
         try:
-            return Teacher.objects.get(id=id)
-        except Teacher.DoesNotExist:
+            return teachers.objects.get(id=id)
+        except teachers.DoesNotExist:
             return None
 
 class CreateTeacher(graphene.Mutation):
@@ -31,7 +31,7 @@ class CreateTeacher(graphene.Mutation):
     teacher = graphene.Field(TeacherType)
 
     def mutate(self, info, first_name, last_name, email, hire_date, subject_specialization):
-        teacher = Teacher(
+        teacher = teachers(
             first_name=first_name,
             last_name=last_name,
             email=email,

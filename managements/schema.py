@@ -1,10 +1,10 @@
 import graphene
 from graphene_django import DjangoObjectType
-from .models import Management
+from .models import management
 
 class ManagementType(DjangoObjectType):
     class Meta:
-        model = Management
+        model = management
         fields = '__all__'
 
 class Query(graphene.ObjectType):
@@ -12,12 +12,12 @@ class Query(graphene.ObjectType):
     management_by_id = graphene.Field(ManagementType, id=graphene.Int(required=True))
 
     def resolve_all_managements(self, info):
-        return Management.objects.all()
+        return management.objects.all()
 
     def resolve_management_by_id(self, info, id):
         try:
-            return Management.objects.get(id=id)
-        except Management.DoesNotExist:
+            return management.objects.get(id=id)
+        except management.DoesNotExist:
             return None
 
 class CreateManagement(graphene.Mutation):
@@ -31,7 +31,7 @@ class CreateManagement(graphene.Mutation):
     management = graphene.Field(ManagementType)
 
     def mutate(self, info, first_name, last_name, email, role, department=None):
-        management = Management(
+        management = management(
             first_name=first_name,
             last_name=last_name,
             email=email,
