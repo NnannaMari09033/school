@@ -1,4 +1,4 @@
 from django.contrib import admin
 
-from .models import timetables 
-admin.site.register(timetables)
+from .models import timeslot 
+admin.site.register(timeslot)

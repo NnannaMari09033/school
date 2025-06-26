@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from graphene_django.views import GraphQLView
+from school.schema import schema
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +26,6 @@ urlpatterns = [
     path('courses/', include('courses.urls')),
     path('timetable/', include('timetable.urls')),
     path('managements/', include('managements.urls')),
-
+    path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
 
 ]

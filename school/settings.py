@@ -44,7 +44,13 @@ INSTALLED_APPS = [
     'grades',
     'timetable',
     'managements',
+    'rest_framework',
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'school.schema.schema'
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

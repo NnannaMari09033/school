@@ -7,7 +7,7 @@ class courses(models.Model):
   code = models.CharField(max_length=50, unique=True)
   teacher = models.ForeignKey(teachers, on_delete=models.CASCADE,  related_name='courses')
   students = models.ManyToManyField(students, related_name='courses')
-  credits = models.PostiveIntegerField()
+  credits = models.PositiveIntegerField()
 
   def __str__(self):
     return {self.name}
