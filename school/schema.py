@@ -32,10 +32,10 @@ schema = graphene.Schema(query=Query, mutation=Mutation)
 
 
 
-    # ... other queries
+    
 class Mutation(
     StudentMutation,
-    # ... other mutations
+    
     graphene.ObjectType
 ):
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()

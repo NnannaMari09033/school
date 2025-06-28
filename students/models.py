@@ -7,7 +7,7 @@ class students(models.Model):
   enrollment_date = models.DateField()
   email = models.EmailField(unique=True)
   student_id = models.CharField(max_length=150, unique=True)
-  # students/models.py
+  
 
   def __str__(self):
     return f"{self.surname} {self.firt_name} {self.last_name}"

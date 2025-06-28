@@ -1,27 +1,32 @@
 import graphene
 from graphene_django import DjangoObjectType
-from .models import students
 from django_filters import FilterSet
 from graphene_django.filter import DjangoFilterConnectionField
 import graphene_django_optimizer as optimizer
+from .models import students
 
 class StudentType(DjangoObjectType):
     class Meta:
-        model = students
+        model = students  
         fields = '__all__'
         interfaces = (graphene.relay.Node,)
 
+class StudentFilter(FilterSet):
+    class Meta:
+        model = students
+        fields = {
+            'first_name': ['exact', 'icontains'],
+            'surname': ['exact', 'icontains'],
+            'student_id': ['exact'],
+            'email': ['exact'],
+        }
+
 class Query(graphene.ObjectType):
-    all_students = graphene.List(StudentType)
+    all_students = DjangoFilterConnectionField(StudentType, filterset_class=StudentFilter, max_limit=100)
     student_by_id = graphene.Field(StudentType, id=graphene.Int(required=True))
 
-    def resolve_all_students(self, info):
-        return students.objects.all()
-    def resolve_all_students(self, info):
-     return optimizer.query(students.objects.all(), info)
-
-    def resolve_all_students(self, info):
-     return students.objects.select_related('courses').all()
+    def resolve_all_students(self, info, **kwargs):
+        return optimizer.query(students.objects.select_related('courses').all(), info)
 
     def resolve_student_by_id(self, info, id):
         try:
@@ -29,19 +34,9 @@ class Query(graphene.ObjectType):
         except students.DoesNotExist:
             return None
 
-class StudentFilter(FilterSet):
-    class Meta:
-        model = students
-        fields = {'first_name': ['exact', 'icontains'], 'student_id': ['exact']}
-
-class Query(graphene.ObjectType):
-    all_students = DjangoFilterConnectionField(StudentType, filterset_class=StudentFilter, max_limit=100)
-    
-class Query(graphene.ObjectType):
-    all_students = DjangoFilterConnectionField(StudentType, filterset_class=StudentFilter)
-    
 class CreateStudent(graphene.Mutation):
     class Arguments:
+        surname = graphene.String(required=True)
         first_name = graphene.String(required=True)
         last_name = graphene.String(required=True)
         email = graphene.String(required=True)
@@ -51,8 +46,9 @@ class CreateStudent(graphene.Mutation):
 
     student = graphene.Field(StudentType)
 
-    def mutate(self, info, first_name, last_name, email, date_of_birth, enrollment_date, student_id):
-        student = students(
+    def mutate(self, info, surname, first_name, last_name, email, date_of_birth, enrollment_date, student_id):
+        student = students(  
+            surname=surname,
             first_name=first_name,
             last_name=last_name,
             email=email,
@@ -62,12 +58,17 @@ class CreateStudent(graphene.Mutation):
         )
         student.save()
         return CreateStudent(student=student)
+
 class UpdateStudent(graphene.Mutation):
     class Arguments:
         id = graphene.Int(required=True)
+        surname = graphene.String()
         first_name = graphene.String()
         last_name = graphene.String()
         email = graphene.String()
+        date_of_birth = graphene.Date()
+        enrollment_date = graphene.Date()
+        student_id = graphene.String()
 
     student = graphene.Field(StudentType)
 

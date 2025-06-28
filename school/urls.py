@@ -22,11 +22,11 @@ from school.schema import schema
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('students/', include('students.urls')),
-    path('teachers/', include('teachers.urls')),
-    path('courses/', include('courses.urls')),
-    path('timetable/', include('timetable.urls')),
-    path('managements/', include('managements.urls')),
+    # path('students/', include('students.urls')),
+    # path('teachers/', include('teachers.urls')),
+    # path('courses/', include('courses.urls')),
+    # path('timetable/', include('timetable.urls')),
+    # path('managements/', include('managements.urls')),
     path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
 
 ]
