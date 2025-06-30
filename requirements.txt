@@ -2,6 +2,7 @@ asgiref==3.8.1
 Django==5.2.3
 django-filter==25.1
 django-graphql-jwt==0.4.0
+django-unfold==0.60.0
 djangorestframework==3.16.0
 graphene==3.4.3
 graphene-django==3.2.3
