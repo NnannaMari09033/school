@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django_filters',
     'graphql_jwt',
     'unfold',
-    
+
     
 ]
 
@@ -62,6 +62,46 @@ AUTHENTICATION_BACKENDS = [
     'graphql_jwt.backends.JSONWebTokenBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+
+UNFOLD = {
+       "SITE_TITLE": "School Admin",
+       "SITE_HEADER": "School Management System",
+       "SITE_URL": "/",
+       "SHOW_HISTORY": True,
+       "SHOW_VIEW_ON_SITE": True,
+       "DASHBOARD_CALLBACK": "school.admin.dashboard_callback",
+       "STYLES": [
+           lambda request: '/static/css/output.css',
+       ],
+       "SIDEBAR": {
+           "show_search": True,
+           "show_all_applications": True,
+           "navigation": [
+               {
+                   "title": "Dashboard",
+                   "icon": "dashboard",
+                   "link": "admin:index",
+               },
+               {
+                   "title": "Students",
+                   "icon": "people",
+                   "link": "admin:students_student_changelist",
+               },
+               {
+                   "title": "Teachers",
+                   "icon": "school",
+                   "link": "admin:teachers_teacher_changelist",
+               },
+               {
+                   "title": "Courses",
+                   "icon": "book",
+                   "link": "admin:courses_course_changelist",
+               },
+           ],
+       },
+   }
+   
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -99,14 +139,14 @@ WSGI_APPLICATION = 'school.wsgi.application'
 from decouple import config 
 DATABASES = {
     'default': {
-          'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='school_db'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default=123456789),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'school_db',
+        'USER': 'school_user',
+        'PASSWORD': '09033271491',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-    }
+}
 
 
 
